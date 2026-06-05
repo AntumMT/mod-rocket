@@ -293,19 +293,22 @@ function rocket.on_step(self, dtime)
 			end
 
 			local p2 = self.object:get_pos()
-			p2.y = p2.y + 6
 			local p3 = self.object:get_pos()
-			p3.y = p3.y + 4
-			if core.get_node(p2).name ~= "air" and core.get_node(p2).name ~= vacuum and core.get_node(p1).name ~= atmos and self.vy > 10 then
-				tnt.boom(p3, {
-					radius = 3,
-					damage_radius = 6,
-					sound = "tnt_explode",
-					explode_center = false,
-				})
-				core.sound_stop(self.soundThrust)
-				self.object:remove()
-				driver_objref:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
+			-- FIXME: fixed without checking origin of issue
+			if p2 ~= nil and p3 ~= nil then
+				p2.y = p2.y + 6
+				p3.y = p3.y + 4
+				if core.get_node(p2).name ~= "air" and core.get_node(p2).name ~= vacuum and core.get_node(p1).name ~= atmos and self.vy > 10 then
+					tnt.boom(p3, {
+						radius = 3,
+						damage_radius = 6,
+						sound = "tnt_explode",
+						explode_center = false,
+					})
+					core.sound_stop(self.soundThrust)
+					self.object:remove()
+					driver_objref:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
+				end
 			end
 		else
 			-- Player left server while driving
@@ -414,38 +417,51 @@ function rocket.on_step(self, dtime)
 		atmos = ":asteriod:atmos"
 	end
 	local p1 = self.object:get_pos()
-	p1.y = p1.y - 1
-	if core.get_node(p1).name ~= "air" and core.get_node(p1).name ~= vacuum and core.get_node(p1).name ~= atmos and self.vy < -10 then
-		tnt.boom(p, {
-			radius = 3,
-			damage_radius = 6,
-			sound = "tnt_explode",
-			explode_center = false,
-		})
-		core.sound_stop(self.soundThrust)
-		self.object:remove()
+	-- FIXME: fixed without checking origin of issue
+	if p1 ~= nil then
+		p1.y = p1.y - 1
+		if core.get_node(p1).name ~= "air" and core.get_node(p1).name ~= vacuum and core.get_node(p1).name ~= atmos and self.vy < -10 then
+			tnt.boom(p, {
+				radius = 3,
+				damage_radius = 6,
+				sound = "tnt_explode",
+				explode_center = false,
+			})
+			-- FIXME: fixed without checking origin of issue
+			if self.soundThrust ~= nil then
+				core.sound_stop(self.soundThrust)
+			end
+			self.object:remove()
+		end
 	end
 
 	local p2 = self.object:get_pos()
-	p2.y = p2.y + 6
 	local p3 = self.object:get_pos()
-	p3.y = p3.y + 4
-	if core.get_node(p2).name ~= "air" and core.get_node(p2).name ~= vacuum and core.get_node(p1).name ~= atmos and self.vy > 10 then
-		tnt.boom(p3, {
-			radius = 3,
-			damage_radius = 6,
-			sound = "tnt_explode",
-			explode_center = false,
-		})
-		core.sound_stop(self.soundThrust)
-		self.object:remove()
+	-- FIXME: fixed without checking origin of issue
+	if p2 ~= nil and p3 ~= nil then
+		p2.y = p2.y + 6
+		p3.y = p3.y + 4
+		if core.get_node(p2).name ~= "air" and core.get_node(p2).name ~= vacuum and core.get_node(p1).name ~= atmos and self.vy > 10 then
+			tnt.boom(p3, {
+				radius = 3,
+				damage_radius = 6,
+				sound = "tnt_explode",
+				explode_center = false,
+			})
+			core.sound_stop(self.soundThrust)
+			self.object:remove()
+		end
 	end
 
 
 	self.object:set_pos(self.object:get_pos())
-	self.object:set_velocity(get_velocity(self.v, self.object:get_yaw(), self.vy))
-	self.object:set_acceleration(new_acce)
-	self.object:set_yaw(self.object:get_yaw() + (1 + dtime) * self.rot)
+	-- FIXME: fixed without checking origin of issue
+	local yaw = self.object:get_yaw()
+	if yaw ~= nil then
+		self.object:set_velocity(get_velocity(self.v, yaw, self.vy))
+		self.object:set_acceleration(new_acce)
+		self.object:set_yaw(yaw + (1 + dtime) * self.rot)
+	end
 end
 
 core.register_entity("rocket:rocket", rocket)
