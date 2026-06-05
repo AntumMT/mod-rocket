@@ -58,7 +58,7 @@ function rocket.on_punch(self, puncher)
 		puncher:set_detach()
 		puncher:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
 		default.player_attached[name] = false
-		minetest.sound_stop(self.soundThrust)
+		core.sound_stop(self.soundThrust)
 	end
 	if not self.driver then
 		-- Move to inventory
@@ -69,10 +69,10 @@ function rocket.on_punch(self, puncher)
 				or not inv:contains_item("main", "rocket:rocket_item") then
 			local leftover = inv:add_item("main", "rocket:rocket_item")
 			if not leftover:is_empty() then
-				minetest.add_item(self.object:getpos(), leftover)
+				core.add_item(self.object:getpos(), leftover)
 			end
 		end
-		minetest.after(0.1, function()
+		core.after(0.1, function()
 			self.object:remove()
 		end)
 	end
@@ -92,10 +92,10 @@ function rocket.on_rightclick(self, clicker)
 		default.player_attached[name] = false
 		default.player_set_animation(clicker, "stand" , 30)
 		local pos = clicker:getpos()
-		minetest.after(0.1, function()
+		core.after(0.1, function()
 			clicker:setpos(pos)
 		end)
-		minetest.sound_stop(self.soundThrust)
+		core.sound_stop(self.soundThrust)
 	elseif not self.driver then
 		-- Attach
 		local attach = clicker:get_attach()
@@ -111,13 +111,13 @@ function rocket.on_rightclick(self, clicker)
 			{x = 0, y = 20, z = 0}, {x = 0, y = 0, z = 0})
 		clicker:set_eye_offset({x=0,y=20,z=0},{x=0,y=0,z=0})
 		default.player_attached[name] = true
-		minetest.after(0.2, function()
+		core.after(0.2, function()
 		--	default.player_set_animation(clicker, "sit" , 30)
 			default.player_set_animation(clicker, "stand" , 30)
 		end)
 		clicker:set_look_horizontal(self.object:getyaw())
-		self.soundThrust=minetest.sound_play({name="thrust"},{object = self.object, gain = 2.0, max_hear_distance = 4, loop = true,}) --old: max_hear_distance = 32
-		--minetest.sound_play({name="fire_fire.3.ogg"},{object = self.object, gain = 2.0, max_hear_distance = 32, loop = true,})
+		self.soundThrust=core.sound_play({name="thrust"},{object = self.object, gain = 2.0, max_hear_distance = 4, loop = true,}) --old: max_hear_distance = 32
+		--core.sound_play({name="fire_fire.3.ogg"},{object = self.object, gain = 2.0, max_hear_distance = 32, loop = true,})
 		--[[
 		Fuel Display Hud (abandoned)
 		local fuel_display = clicker:hud_add({ --HUD
@@ -143,7 +143,7 @@ function rocket.on_step(self, dtime)
 
 	-- Controls
 	if self.driver then
-		local driver_objref = minetest.get_player_by_name(self.driver)
+		local driver_objref = core.get_player_by_name(self.driver)
 		if driver_objref then
 			if driver_objref:get_breath() < 11 then
 				--Oxygen system, for when in space or an unbreathable atmosphere
@@ -153,14 +153,14 @@ function rocket.on_step(self, dtime)
 			if ctrl.jump and ctrl.sneak then --if ctrl.up and ctrl.down then
 				if not self.auto then
 					self.auto = true
-					minetest.chat_send_player(self.driver,
+					core.chat_send_player(self.driver,
 						"[rocket] Cruise on")
 				end
 			elseif ctrl.sneak then --ctrl.down then
 				--self.v = self.v - 0.1
 				if self.auto then
 					self.auto = false
-					minetest.chat_send_player(self.driver,
+					core.chat_send_player(self.driver,
 						"[rocket] Cruise off")
 				end
 				--[[
@@ -175,13 +175,13 @@ function rocket.on_step(self, dtime)
 				self.v = self.v - 0.1
 			end
 			if ctrl.left and ctrl.right and self.vy < 10 then --go into sideways rocket
-				local sideways_rocket = minetest.add_entity(self.object:getpos(), "rocket:sideways_rocket")
+				local sideways_rocket = core.add_entity(self.object:getpos(), "rocket:sideways_rocket")
 				sideways_rocket:setyaw(self.object:getyaw())
 				default.player_set_animation(driver_objref, "sit" , 30)
 				driver_objref:set_detach()
 				driver_objref:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
 				driver_objref:set_attach(sideways_rocket, "", {x = 0, y = 1, z = 0}, {x = 0, y = 0, z = 0})
-				minetest.sound_stop(self.soundThrust)
+				core.sound_stop(self.soundThrust)
 				self.object:remove()
 				--right click after pressing A+D to go into the sideways rocket
 			elseif ctrl.left then
@@ -194,8 +194,8 @@ function rocket.on_step(self, dtime)
 					self.vy = self.vy + 0.075
 					--self.vy = self.vy + 7.5
 				end
-				
-				minetest.add_particlespawner({
+
+				core.add_particlespawner({
 					amount = 3, --1,
 					time = 0.2, --0.1,
 					minpos = {x = 0, y = 0, z = 0},
@@ -211,8 +211,8 @@ function rocket.on_step(self, dtime)
 					attached = self.object,
 					texture = "rocket_smoke.png",
 				})
-				
-				minetest.add_particlespawner({
+
+				core.add_particlespawner({
 					amount = 1, --1,
 					time = 1.0, --0.1,
 					minpos = {x = 0, y = 0, z = 0},
@@ -228,13 +228,13 @@ function rocket.on_step(self, dtime)
 					attached = self.object,
 					texture = "rocket_boom.png",
 				})
-				
+
 			elseif (not (ctrl.jump or self.auto)) and self.vy > -50 then --elseif ctrl.sneak then
 				self.vy = self.vy - 0.075
 				--self.vy = self.vy - 7.5
 			end
 			if self.auto and self.vy > 0 and (not ctrl.jump) then
-				minetest.add_particlespawner({
+				core.add_particlespawner({
 					amount = 3, --1,
 					time = 0.2, --0.1,
 					minpos = {x = 0, y = 0, z = 0},
@@ -250,8 +250,8 @@ function rocket.on_step(self, dtime)
 					attached = self.object,
 					texture = "rocket_smoke.png",
 				})
-				
-				minetest.add_particlespawner({
+
+				core.add_particlespawner({
 					amount = 1, --1,
 					time = 1.0, --0.1,
 					minpos = {x = 0, y = 0, z = 0},
@@ -271,23 +271,23 @@ function rocket.on_step(self, dtime)
 			--Crash landing with a pilot
 			local p = self.object:getpos()
 			local vacuum = "air"
-			if(minetest.get_modpath("vacuum")) ~= nil then
+			if(core.get_modpath("vacuum")) ~= nil then
 				vacuum = "vacuum:vacuum"
 			end
 			local atmos = "air"
-			if(minetest.get_modpath("other_worlds")) ~= nil then
+			if(core.get_modpath("other_worlds")) ~= nil then
 				atmos = ":asteriod:atmos"
 			end
 			local p1 = self.object:getpos()
 			p1.y = p1.y - 1
-			if minetest.get_node(p1).name ~= "air" and minetest.get_node(p1).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.vy < -10 then
+			if core.get_node(p1).name ~= "air" and core.get_node(p1).name ~= vacuum and core.get_node(p1).name ~= atmos and self.vy < -10 then
 				tnt.boom(p, {
 					radius = 3,
 					damage_radius = 6,
 					sound = "tnt_explode",
 					explode_center = false,
 				})
-				minetest.sound_stop(self.soundThrust)
+				core.sound_stop(self.soundThrust)
 				self.object:remove()
 				driver_objref:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
 			end
@@ -296,14 +296,14 @@ function rocket.on_step(self, dtime)
 			p2.y = p2.y + 6
 			local p3 = self.object:getpos()
 			p3.y = p3.y + 4
-			if minetest.get_node(p2).name ~= "air" and minetest.get_node(p2).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.vy > 10 then
+			if core.get_node(p2).name ~= "air" and core.get_node(p2).name ~= vacuum and core.get_node(p1).name ~= atmos and self.vy > 10 then
 				tnt.boom(p3, {
 					radius = 3,
 					damage_radius = 6,
 					sound = "tnt_explode",
 					explode_center = false,
 				})
-				minetest.sound_stop(self.soundThrust)
+				core.sound_stop(self.soundThrust)
 				self.object:remove()
 				driver_objref:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
 			end
@@ -312,14 +312,14 @@ function rocket.on_step(self, dtime)
 			-- In MT 5.0.0 use 'rocket:on_detach_child()' to do this
 			self.driver = nil
 			self.auto = false
-			minetest.log("warning", "[rocket] Driver left server while" ..
+			core.log("warning", "[rocket] Driver left server while" ..
 				" driving. This may cause some 'Pushing ObjectRef to" ..
 				" removed/deactivated object' warnings.")
 		end
 	end
 
 	if self.vy > 0 and (not self.driver) then
-		minetest.add_particlespawner({
+		core.add_particlespawner({
 			amount = 3, --1,
 			time = 0.2, --0.1,
 			minpos = {x = 0, y = 0, z = 0},
@@ -335,8 +335,8 @@ function rocket.on_step(self, dtime)
 			attached = self.object,
 			texture = "rocket_smoke.png",
 		})
-		
-		minetest.add_particlespawner({
+
+		core.add_particlespawner({
 			amount = 1, --1,
 			time = 1.0, --0.1,
 			minpos = {x = 0, y = 0, z = 0},
@@ -397,7 +397,7 @@ function rocket.on_step(self, dtime)
 	--[[
 	local p = self.object:getpos()
 	p.y = p.y - 1.5
-	local def = minetest.registered_nodes[minetest.get_node(p).name]
+	local def = core.registered_nodes[core.get_node(p).name]
 	if def and (def.liquidtype == "source" or def.liquidtype == "flowing") then
 		new_acce = {x = 0, y = 10, z = 0}
 	end
@@ -406,23 +406,23 @@ function rocket.on_step(self, dtime)
 	--Crash landing without a pilot
 	local p = self.object:getpos()
 	local vacuum = "air"
-	if(minetest.get_modpath("vacuum")) ~= nil then
+	if(core.get_modpath("vacuum")) ~= nil then
 		vacuum = "vacuum:vacuum"
 	end
 	local atmos = "air"
-	if(minetest.get_modpath("other_worlds")) ~= nil then
+	if(core.get_modpath("other_worlds")) ~= nil then
 		atmos = ":asteriod:atmos"
 	end
 	local p1 = self.object:getpos()
 	p1.y = p1.y - 1
-	if minetest.get_node(p1).name ~= "air" and minetest.get_node(p1).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.vy < -10 then
+	if core.get_node(p1).name ~= "air" and core.get_node(p1).name ~= vacuum and core.get_node(p1).name ~= atmos and self.vy < -10 then
 		tnt.boom(p, {
 			radius = 3,
 			damage_radius = 6,
 			sound = "tnt_explode",
 			explode_center = false,
 		})
-		minetest.sound_stop(self.soundThrust)
+		core.sound_stop(self.soundThrust)
 		self.object:remove()
 	end
 
@@ -430,14 +430,14 @@ function rocket.on_step(self, dtime)
 	p2.y = p2.y + 6
 	local p3 = self.object:getpos()
 	p3.y = p3.y + 4
-	if minetest.get_node(p2).name ~= "air" and minetest.get_node(p2).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.vy > 10 then
+	if core.get_node(p2).name ~= "air" and core.get_node(p2).name ~= vacuum and core.get_node(p1).name ~= atmos and self.vy > 10 then
 		tnt.boom(p3, {
 			radius = 3,
 			damage_radius = 6,
 			sound = "tnt_explode",
 			explode_center = false,
 		})
-		minetest.sound_stop(self.soundThrust)
+		core.sound_stop(self.soundThrust)
 		self.object:remove()
 	end
 
@@ -448,7 +448,7 @@ function rocket.on_step(self, dtime)
 	self.object:setyaw(self.object:getyaw() + (1 + dtime) * self.rot)
 end
 
-minetest.register_entity("rocket:rocket", rocket)
+core.register_entity("rocket:rocket", rocket)
 
 --Horizontal rocket: moving in space, docking
 
@@ -485,7 +485,7 @@ function sideways_rocket.on_punch(self, puncher)
 		self.driver = nil
 		puncher:set_detach()
 		default.player_attached[name] = false
-		minetest.sound_stop(self.soundThrust)
+		core.sound_stop(self.soundThrust)
 	end
 	if not self.driver then
 		-- Move to inventory
@@ -496,10 +496,10 @@ function sideways_rocket.on_punch(self, puncher)
 				or not inv:contains_item("main", "rocket:rocket_item") then
 			local leftover = inv:add_item("main", "rocket:rocket_item")
 			if not leftover:is_empty() then
-				minetest.add_item(self.object:getpos(), leftover)
+				core.add_item(self.object:getpos(), leftover)
 			end
 		end
-		minetest.after(0.1, function()
+		core.after(0.1, function()
 			self.object:remove()
 		end)
 	end
@@ -518,10 +518,10 @@ function sideways_rocket.on_rightclick(self, clicker)
 		default.player_attached[name] = false
 		default.player_set_animation(clicker, "stand" , 30)
 		local pos = clicker:getpos()
-		minetest.after(0.1, function()
+		core.after(0.1, function()
 			clicker:setpos(pos)
 		end)
-		minetest.sound_stop(self.soundThrust)
+		core.sound_stop(self.soundThrust)
 	elseif not self.driver then
 		-- Attach
 		local attach = clicker:get_attach()
@@ -536,11 +536,11 @@ function sideways_rocket.on_rightclick(self, clicker)
 		clicker:set_attach(self.object, "",
 			{x = 0, y = 1, z = 0}, {x = 0, y = 0, z = 0})
 		default.player_attached[name] = true
-		minetest.after(0.2, function()
+		core.after(0.2, function()
 			default.player_set_animation(clicker, "sit" , 30)
 		end)
 		clicker:set_look_horizontal(self.object:getyaw())
-		self.soundThrust=minetest.sound_play({name="thrust"},{object = self.object, gain = 2.0, max_hear_distance = 4, loop = true,})--old: max_hear_distance = 32
+		self.soundThrust=core.sound_play({name="thrust"},{object = self.object, gain = 2.0, max_hear_distance = 4, loop = true,})--old: max_hear_distance = 32
 	end
 end
 
@@ -554,7 +554,7 @@ function sideways_rocket.on_step(self, dtime)
 
 	-- Controls
 	if self.driver then
-		local driver_objref = minetest.get_player_by_name(self.driver)
+		local driver_objref = core.get_player_by_name(self.driver)
 		if driver_objref then
 			if driver_objref:get_breath() < 11 then
 				--Oxygen system, for when in space or an unbreathable atmosphere
@@ -564,7 +564,7 @@ function sideways_rocket.on_step(self, dtime)
 			if ctrl.up and ctrl.down then
 				if not self.auto then
 					self.auto = true
-					minetest.chat_send_player(self.driver,
+					core.chat_send_player(self.driver,
 						"[rocket] Cruise on")
 				end
 			elseif ctrl.down then --braking
@@ -576,7 +576,7 @@ function sideways_rocket.on_step(self, dtime)
 				end
 				if self.auto then
 					self.auto = false
-					minetest.chat_send_player(self.driver,
+					core.chat_send_player(self.driver,
 						"[rocket] Cruise off")
 				end
 			elseif ctrl.up or self.auto then
@@ -584,7 +584,7 @@ function sideways_rocket.on_step(self, dtime)
 				if self.v < 30.0 then
 					self.v = self.v + 0.1
 				end
-				minetest.add_particlespawner({
+				core.add_particlespawner({
 					amount = 1, --1,
 					time = 1.0, --0.1,
 					minpos = {x = 0, y = 0.5, z = 0},
@@ -602,13 +602,13 @@ function sideways_rocket.on_step(self, dtime)
 				})
 			end
 			if ctrl.left and ctrl.right and self.v < 10 then --go into vertical rocket
-				local rocket = minetest.add_entity(self.object:getpos(), "rocket:rocket")
+				local rocket = core.add_entity(self.object:getpos(), "rocket:rocket")
 				rocket:setyaw(self.object:getyaw())
 				default.player_set_animation(driver_objref, "stand" , 30)
 				driver_objref:set_detach()
 				driver_objref:set_eye_offset({x=0,y=20,z=0},{x=0,y=0,z=0})
 				driver_objref:set_attach(rocket, "", {x = 0, y = 20, z = 0}, {x = 0, y = 0, z = 0})
-				minetest.sound_stop(self.soundThrust)
+				core.sound_stop(self.soundThrust)
 				self.object:remove()
 				--right click after pressing A+D to go into the rocket
 			elseif ctrl.left then
@@ -621,15 +621,15 @@ function sideways_rocket.on_step(self, dtime)
 			elseif ctrl.sneak then
 				self.vy = self.vy - 0.075
 			end
-			
+
 			--Crashing with a pilot
 			local p = self.object:getpos()
 			local vacuum = "air"
-			if(minetest.get_modpath("vacuum")) ~= nil then
+			if(core.get_modpath("vacuum")) ~= nil then
 				vacuum = "vacuum:vacuum"
 			end
 			local atmos = "air"
-			if(minetest.get_modpath("other_worlds")) ~= nil then
+			if(core.get_modpath("other_worlds")) ~= nil then
 				atmos = ":asteriod:atmos"
 			end
 			local p1 = self.object:getpos()
@@ -640,8 +640,8 @@ function sideways_rocket.on_step(self, dtime)
 			p3.z = p3.z + 2
 			local p4 = self.object:getpos()
 			p4.x = p4.x - 2
-			if minetest.get_node(p1).name ~= "air" and minetest.get_node(p1).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.v > 10 then
-				minetest.sound_stop(self.soundThrust)
+			if core.get_node(p1).name ~= "air" and core.get_node(p1).name ~= vacuum and core.get_node(p1).name ~= atmos and self.v > 10 then
+				core.sound_stop(self.soundThrust)
 				self.object:remove()
 				if driver_objref then
 					default.player_set_animation(driver_objref, "stand" , 30)
@@ -653,8 +653,8 @@ function sideways_rocket.on_step(self, dtime)
 					sound = "tnt_explode",
 					explode_center = false,
 				})
-			elseif minetest.get_node(p2).name ~= "air" and minetest.get_node(p2).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.v > 10 then
-				minetest.sound_stop(self.soundThrust)
+			elseif core.get_node(p2).name ~= "air" and core.get_node(p2).name ~= vacuum and core.get_node(p1).name ~= atmos and self.v > 10 then
+				core.sound_stop(self.soundThrust)
 				self.object:remove()
 				if driver_objref then
 					default.player_set_animation(driver_objref, "stand" , 30)
@@ -666,8 +666,8 @@ function sideways_rocket.on_step(self, dtime)
 					sound = "tnt_explode",
 					explode_center = false,
 				})
-			elseif minetest.get_node(p3).name ~= "air" and minetest.get_node(p3).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.v > 10 then
-				minetest.sound_stop(self.soundThrust)
+			elseif core.get_node(p3).name ~= "air" and core.get_node(p3).name ~= vacuum and core.get_node(p1).name ~= atmos and self.v > 10 then
+				core.sound_stop(self.soundThrust)
 				self.object:remove()
 				if driver_objref then
 					default.player_set_animation(driver_objref, "stand" , 30)
@@ -679,8 +679,8 @@ function sideways_rocket.on_step(self, dtime)
 					sound = "tnt_explode",
 					explode_center = false,
 				})
-			elseif minetest.get_node(p4).name ~= "air" and minetest.get_node(p4).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.v > 10 then
-				minetest.sound_stop(self.soundThrust)
+			elseif core.get_node(p4).name ~= "air" and core.get_node(p4).name ~= vacuum and core.get_node(p1).name ~= atmos and self.v > 10 then
+				core.sound_stop(self.soundThrust)
 				self.object:remove()
 				if driver_objref then
 					default.player_set_animation(driver_objref, "stand" , 30)
@@ -698,14 +698,14 @@ function sideways_rocket.on_step(self, dtime)
 			-- In MT 5.0.0 use 'sideways_rocket:on_detach_child()' to do this
 			self.driver = nil
 			self.auto = false
-			minetest.log("warning", "[rocket] Driver left server while" ..
+			core.log("warning", "[rocket] Driver left server while" ..
 				" driving. This may cause some 'Pushing ObjectRef to" ..
 				" removed/deactivated object' warnings.")
 		end
 	end
 
 	if self.v > 0 and (not self.driver) then
-		minetest.add_particlespawner({
+		core.add_particlespawner({
 			amount = 1, --1,
 			time = 1.0, --0.1,
 			minpos = {x = 0, y = 0.5, z = 0},
@@ -766,7 +766,7 @@ function sideways_rocket.on_step(self, dtime)
 	--[[
 	local p = self.object:getpos()
 	p.y = p.y - 1.5
-	local def = minetest.registered_nodes[minetest.get_node(p).name]
+	local def = core.registered_nodes[core.get_node(p).name]
 	if def and (def.liquidtype == "source" or def.liquidtype == "flowing") then
 		new_acce = {x = 0, y = 10, z = 0}
 	end
@@ -775,11 +775,11 @@ function sideways_rocket.on_step(self, dtime)
 	--Crashing without a pilot
 	local p = self.object:getpos()
 	local vacuum = "air"
-	if(minetest.get_modpath("vacuum")) ~= nil then
+	if(core.get_modpath("vacuum")) ~= nil then
 		vacuum = "vacuum:vacuum"
 	end
 	local atmos = "air"
-	if(minetest.get_modpath("other_worlds")) ~= nil then
+	if(core.get_modpath("other_worlds")) ~= nil then
 		atmos = ":asteriod:atmos"
 	end
 	local p1 = self.object:getpos()
@@ -790,8 +790,8 @@ function sideways_rocket.on_step(self, dtime)
 	p3.z = p3.z + 2
 	local p4 = self.object:getpos()
 	p4.x = p4.x - 2
-	if minetest.get_node(p1).name ~= "air" and minetest.get_node(p1).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.v > 10 then
-		minetest.sound_stop(self.soundThrust)
+	if core.get_node(p1).name ~= "air" and core.get_node(p1).name ~= vacuum and core.get_node(p1).name ~= atmos and self.v > 10 then
+		core.sound_stop(self.soundThrust)
 		self.object:remove()
 		if driver_objref then
 			default.player_set_animation(driver_objref, "stand" , 30)
@@ -803,8 +803,8 @@ function sideways_rocket.on_step(self, dtime)
 			sound = "tnt_explode",
 			explode_center = false,
 		})
-	elseif minetest.get_node(p2).name ~= "air" and minetest.get_node(p2).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.v > 10 then
-		minetest.sound_stop(self.soundThrust)
+	elseif core.get_node(p2).name ~= "air" and core.get_node(p2).name ~= vacuum and core.get_node(p1).name ~= atmos and self.v > 10 then
+		core.sound_stop(self.soundThrust)
 		self.object:remove()
 		if driver_objref then
 			default.player_set_animation(driver_objref, "stand" , 30)
@@ -816,8 +816,8 @@ function sideways_rocket.on_step(self, dtime)
 			sound = "tnt_explode",
 			explode_center = false,
 		})
-	elseif minetest.get_node(p3).name ~= "air" and minetest.get_node(p3).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.v > 10 then
-		minetest.sound_stop(self.soundThrust)
+	elseif core.get_node(p3).name ~= "air" and core.get_node(p3).name ~= vacuum and core.get_node(p1).name ~= atmos and self.v > 10 then
+		core.sound_stop(self.soundThrust)
 		self.object:remove()
 		if driver_objref then
 			default.player_set_animation(driver_objref, "stand" , 30)
@@ -829,8 +829,8 @@ function sideways_rocket.on_step(self, dtime)
 			sound = "tnt_explode",
 			explode_center = false,
 		})
-	elseif minetest.get_node(p4).name ~= "air" and minetest.get_node(p4).name ~= vacuum and minetest.get_node(p1).name ~= atmos and self.v > 10 then
-		minetest.sound_stop(self.soundThrust)
+	elseif core.get_node(p4).name ~= "air" and core.get_node(p4).name ~= vacuum and core.get_node(p1).name ~= atmos and self.v > 10 then
+		core.sound_stop(self.soundThrust)
 		self.object:remove()
 		if driver_objref then
 			default.player_set_animation(driver_objref, "stand" , 30)
@@ -851,11 +851,11 @@ function sideways_rocket.on_step(self, dtime)
 	self.object:setyaw(self.object:getyaw() + (1 + dtime) * self.rot)
 end
 
-minetest.register_entity("rocket:sideways_rocket", sideways_rocket)
+core.register_entity("rocket:sideways_rocket", sideways_rocket)
 
 --Main Craftitem
 
-minetest.register_craftitem("rocket:rocket_item", {
+core.register_craftitem("rocket:rocket_item", {
 	description = "Space Shuttle",
 	inventory_image = "rocket_rocket_inv.png",
 	wield_scale = {x = 1, y = 1, z = 1},
@@ -863,8 +863,8 @@ minetest.register_craftitem("rocket:rocket_item", {
 
 	on_place = function(itemstack, placer, pointed_thing)
 		local under = pointed_thing.under
-		local node = minetest.get_node(under)
-		local udef = minetest.registered_nodes[node.name]
+		local node = core.get_node(under)
+		local udef = core.registered_nodes[node.name]
 
 		-- Run any on_rightclick function of pointed node instead
 		if udef and udef.on_rightclick and
@@ -879,7 +879,7 @@ minetest.register_craftitem("rocket:rocket_item", {
 		end
 
 		pointed_thing.under.y = pointed_thing.under.y + 0.5 -- + 2
-		local rocket = minetest.add_entity(pointed_thing.under,
+		local rocket = core.add_entity(pointed_thing.under,
 			"rocket:rocket")
 		if rocket then
 			if placer then
@@ -897,34 +897,34 @@ minetest.register_craftitem("rocket:rocket_item", {
 
 --Other craftitems
 
-minetest.register_craftitem("rocket:rocket_cone", {
+core.register_craftitem("rocket:rocket_cone", {
 	description = "Rocket Cone",
 	inventory_image = "rocket_cone.png"
 })
 
-minetest.register_craftitem("rocket:rocket_thruster", {
+core.register_craftitem("rocket:rocket_thruster", {
 	description = "Rocket Thruster",
 	inventory_image = "rocket_thruster.png"
 })
 
-minetest.register_craftitem("rocket:rocket_hull", {
+core.register_craftitem("rocket:rocket_hull", {
 	description = "Rocket Hull",
 	inventory_image = "rocket_hull.png"
 })
 
-minetest.register_craftitem("rocket:rocket_left_fin", {
+core.register_craftitem("rocket:rocket_left_fin", {
 	description = "Rocket Left Fin",
 	inventory_image = "rocket_left_fin.png"
 })
 
-minetest.register_craftitem("rocket:rocket_right_fin", {
+core.register_craftitem("rocket:rocket_right_fin", {
 	description = "Rocket Right Fin",
 	inventory_image = "rocket_right_fin.png"
 })
 
 --Crafting recipes
 
-minetest.register_craft({
+core.register_craft({
     type = "shaped",
     output = "rocket:rocket_left_fin",
     recipe = {
@@ -934,7 +934,7 @@ minetest.register_craft({
     }
 })
 
-minetest.register_craft({
+core.register_craft({
     type = "shaped",
     output = "rocket:rocket_right_fin",
     recipe = {
@@ -944,7 +944,7 @@ minetest.register_craft({
     }
 })
 
-minetest.register_craft({
+core.register_craft({
     type = "shaped",
     output = "rocket:rocket_thruster",
     recipe = {
@@ -954,7 +954,7 @@ minetest.register_craft({
     }
 })
 
-minetest.register_craft({
+core.register_craft({
     type = "shaped",
     output = "rocket:rocket_hull",
     recipe = {
@@ -964,7 +964,7 @@ minetest.register_craft({
     }
 })
 
-minetest.register_craft({
+core.register_craft({
     type = "shaped",
     output = "rocket:rocket_cone",
     recipe = {
@@ -974,7 +974,7 @@ minetest.register_craft({
     }
 })
 
-minetest.register_craft({
+core.register_craft({
     type = "shaped",
     output = "rocket:rocket_item",
     recipe = {
@@ -987,7 +987,7 @@ minetest.register_craft({
 --Liquids
 
 --Oil
-minetest.register_node("rocket:oil_source", {
+core.register_node("rocket:oil_source", {
 	description = "Oil Source",
 	drawtype = "liquid",
 	tiles = {
@@ -1032,7 +1032,7 @@ minetest.register_node("rocket:oil_source", {
 	groups = {oil = 3, liquid = 1, flammable = 1},
 	sounds = default.node_sound_water_defaults(),
 })
-minetest.register_node("rocket:oil_flowing", {
+core.register_node("rocket:oil_flowing", {
 	description = "Flowing Oil",
 	drawtype = "flowingliquid",
 	tiles = {"rocket_oil_source.png"},
@@ -1087,7 +1087,7 @@ bucket.register_liquid(
 )
 
 --Oil ore
-	minetest.register_ore({
+	core.register_ore({
 		ore_type       = "scatter",
 		ore            = "rocket:oil_source",
 		wherein        = "default:stone",
@@ -1098,7 +1098,7 @@ bucket.register_liquid(
 		y_max          = -128,
 	})
 
-	minetest.register_ore({
+	core.register_ore({
 		ore_type       = "scatter",
 		ore            = "rocket:oil_source",
 		wherein        = "default:stone",
@@ -1110,7 +1110,7 @@ bucket.register_liquid(
 	})
 
 --Rocket fuel
-minetest.register_node("rocket:rocket_fuel_source", {
+core.register_node("rocket:rocket_fuel_source", {
 	description = "Rocket Fuel Source",
 	drawtype = "liquid",
 	tiles = {
@@ -1155,7 +1155,7 @@ minetest.register_node("rocket:rocket_fuel_source", {
 	groups = {oil = 3, liquid = 1, flammable = 1},
 	sounds = default.node_sound_water_defaults(),
 })
-minetest.register_node("rocket:rocket_fuel_flowing", {
+core.register_node("rocket:rocket_fuel_flowing", {
 	description = "Flowing Rocket Fuel",
 	drawtype = "flowingliquid",
 	tiles = {"rocket_rocket_fuel_source.png"},
@@ -1210,7 +1210,7 @@ bucket.register_liquid(
 )
 
 --Oil refinement recipe
-minetest.register_craft({
+core.register_craft({
     type = "cooking",
     output = "rocket:bucket_rocket_fuel",
     recipe = "rocket:bucket_oil",
@@ -1218,7 +1218,7 @@ minetest.register_craft({
 })
 
 --Rocket fuel as a fuel
-minetest.register_craft({
+core.register_craft({
 	type = "fuel",
 	recipe = "rocket:bucket_rocket_fuel",
 	burntime = 80,

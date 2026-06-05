@@ -52,15 +52,15 @@ local rover = {
 
 -- Rover item
 
-minetest.register_craftitem("rocket:rover", {
+core.register_craftitem("rocket:rover", {
 	description = "Rover",
 	inventory_image = "rover.png",--"rocket_rover_front.png",
 	--wield_scale = {x = 2, y = 2, z = 2},
 
 	on_place = function(itemstack, placer, pointed_thing)
 		local under = pointed_thing.under
-		local node = minetest.get_node(under)
-		local udef = minetest.registered_nodes[node.name]
+		local node = core.get_node(under)
+		local udef = core.registered_nodes[node.name]
 		if udef and udef.on_rightclick and
 				not (placer and placer:get_player_control().sneak) then
 			return udef.on_rightclick(under, node, placer, itemstack,
@@ -68,12 +68,12 @@ minetest.register_craftitem("rocket:rover", {
 		end
 
 		if pointed_thing.type == "node" and
-				minetest.registered_nodes[node.name].walkable then
+				core.registered_nodes[node.name].walkable then
 			under.y = under.y + 1.5 --0.5
-			local rover = minetest.add_entity(under, "rocket:rover")
+			local rover = core.add_entity(under, "rocket:rover")
 			if rover then
 				rover:setyaw(placer:get_look_horizontal())
-				if not minetest.settings:get_bool("creative_mode") then
+				if not core.settings:get_bool("creative_mode") then
 					itemstack:take_item()
 				end
 			end
@@ -86,7 +86,7 @@ minetest.register_craftitem("rocket:rover", {
 
 -- Register entity
 
-minetest.register_entity("rocket:rover", rover)
+core.register_entity("rocket:rover", rover)
 
 
 -- Rover entity functions
@@ -115,7 +115,7 @@ function rover:on_rightclick(clicker)
 		clicker:set_attach(self.object, "",
 			{x = 0, y = 12, z = -10}, {x = 0, y = 0, z = 0})
 		default.player_attached[name] = true
-		minetest.after(0.2, function()
+		core.after(0.2, function()
 			default.player_set_animation(clicker, "sit" , 30)
 		end)
 		clicker:set_look_horizontal(self.object:getyaw())
@@ -150,16 +150,16 @@ function rover.on_punch(self, puncher, time_from_last_punch,
 	if not self.driver then
 		self.removed = true
 		local inv = puncher:get_inventory()
-		if not minetest.setting_getbool("creative_mode")
+		if not core.setting_getbool("creative_mode")
 				or not inv:contains_item("main", "rocket:rover") then
 			local leftover = inv:add_item("main", "rocket:rover")
 			-- If no room in inventory add a replacement rover to the world
 			if not leftover:is_empty() then
-				minetest.add_item(self.object:getpos(), leftover)
+				core.add_item(self.object:getpos(), leftover)
 			end
 		end
 		-- Delay remove to ensure player is detached
-		minetest.after(0.1, function()
+		core.after(0.1, function()
 			self.object:remove()
 		end)
 	end
@@ -181,8 +181,8 @@ function rover:on_step(dtime)
 	local obj_pos = self.object:getpos()
 	obj_pos.y = obj_pos.y - 1.1
 	local under_pos = obj_pos
-	local node_under = minetest.get_node(under_pos)
-	local nodedef_under = minetest.registered_nodes[node_under.name]
+	local node_under = core.get_node(under_pos)
+	local nodedef_under = core.registered_nodes[node_under.name]
 	local touch_ground = nodedef_under.walkable
 
 	local absv = get_v(self.object:getvelocity())
@@ -229,7 +229,7 @@ function rover:on_step(dtime)
 	-- Vertical behaviour
 	local obj_pos = self.object:getpos()
 	obj_pos.y = obj_pos.y - 0.5
-	local nodedef_in = minetest.registered_nodes[minetest.get_node(obj_pos).name]
+	local nodedef_in = core.registered_nodes[core.get_node(obj_pos).name]
 	if nodedef_in.walkable then
 		-- In node, jump up
 		self.object:setacceleration({x = 0, y = 0, z = 0})
@@ -262,7 +262,7 @@ function rover:on_step(dtime)
 			--if node_under.name == "rocket:dust" or
 			--		node_under.name == "rocket:dustprint1" or
 			--		node_under.name == "rocket:dustprint2" then
-			--	minetest.set_node(under_pos, {name = "rocket:dusttrack"})
+			--	core.set_node(under_pos, {name = "rocket:dusttrack"})
 			--end
 		end
 	end
