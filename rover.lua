@@ -72,7 +72,7 @@ core.register_craftitem("rocket:rover", {
 			under.y = under.y + 1.5 --0.5
 			local rover = core.add_entity(under, "rocket:rover")
 			if rover then
-				rover:setyaw(placer:get_look_horizontal())
+				rover:set_yaw(placer:get_look_horizontal())
 				if not core.settings:get_bool("creative_mode") then
 					itemstack:take_item()
 				end
@@ -118,7 +118,7 @@ function rover:on_rightclick(clicker)
 		core.after(0.2, function()
 			default.player_set_animation(clicker, "sit" , 30)
 		end)
-		clicker:set_look_horizontal(self.object:getyaw())
+		clicker:set_look_horizontal(self.object:get_yaw())
 	end
 end
 
@@ -155,7 +155,7 @@ function rover.on_punch(self, puncher, time_from_last_punch,
 			local leftover = inv:add_item("main", "rocket:rover")
 			-- If no room in inventory add a replacement rover to the world
 			if not leftover:is_empty() then
-				core.add_item(self.object:getpos(), leftover)
+				core.add_item(self.object:get_pos(), leftover)
 			end
 		end
 		-- Delay remove to ensure player is detached
@@ -178,7 +178,7 @@ function rover:on_step(dtime)
 	end
 
 	-- Touching ground?
-	local obj_pos = self.object:getpos()
+	local obj_pos = self.object:get_pos()
 	obj_pos.y = obj_pos.y - 1.1
 	local under_pos = obj_pos
 	local node_under = core.get_node(under_pos)
@@ -205,9 +205,9 @@ function rover:on_step(dtime)
 				turn = maxturn * (1 - (absv - 4) / 8)
 			end
 			if ctrl.left then
-				self.object:setyaw(self.object:getyaw() + turn)
+				self.object:set_yaw(self.object:get_yaw() + turn)
 			elseif ctrl.right then
-				self.object:setyaw(self.object:getyaw() - turn)
+				self.object:set_yaw(self.object:get_yaw() - turn)
 			end
 		end
 
@@ -215,7 +215,7 @@ function rover:on_step(dtime)
 		local s = get_sign(self.v)
 		self.v = self.v - 0.04 * s
 		if s ~= get_sign(self.v) then
-			self.object:setvelocity({x = 0, y = 0, z = 0})
+			self.object:set_velocity({x = 0, y = 0, z = 0})
 			self.v = 0
 			return
 		end
@@ -227,37 +227,37 @@ function rover:on_step(dtime)
 	end
 
 	-- Vertical behaviour
-	local obj_pos = self.object:getpos()
+	local obj_pos = self.object:get_pos()
 	obj_pos.y = obj_pos.y - 0.5
 	local nodedef_in = core.registered_nodes[core.get_node(obj_pos).name]
 	if nodedef_in.walkable then
 		-- In node, jump up
-		self.object:setacceleration({x = 0, y = 0, z = 0})
-		self.object:setvelocity(get_velocity(self.v,
-			self.object:getyaw(), math.max(absv / 2, 1)))
-		self.object:setpos(self.object:getpos())
+		self.object:set_acceleration({x = 0, y = 0, z = 0})
+		self.object:set_velocity(get_velocity(self.v,
+			self.object:get_yaw(), math.max(absv / 2, 1)))
+		self.object:set_pos(self.object:get_pos())
 	else
 		if not touch_ground then
 			-- No node under, freefall
-			self.object:setacceleration({x = 0, y = -1.962, z = 0})
-			self.object:setvelocity(get_velocity(self.v, self.object:getyaw(),
+			self.object:set_acceleration({x = 0, y = -1.962, z = 0})
+			self.object:set_velocity(get_velocity(self.v, self.object:get_yaw(),
 				self.object:getvelocity().y))
-			self.object:setpos(self.object:getpos())
+			self.object:set_pos(self.object:get_pos())
 		else
 			-- Node under, on surface, check y velocity
 			if self.object:getvelocity().y < 0 then
 				-- Landing on surface
-				local pos = self.object:getpos()
+				local pos = self.object:get_pos()
 				pos.y = math.floor(pos.y) + 0.5
-				self.object:setacceleration({x = 0, y = 0, z = 0})
-				self.object:setvelocity(get_velocity(self.v, self.object:getyaw(), 0))
-				self.object:setpos(pos)
+				self.object:set_acceleration({x = 0, y = 0, z = 0})
+				self.object:set_velocity(get_velocity(self.v, self.object:get_yaw(), 0))
+				self.object:set_pos(pos)
 			else
 				-- On surface or jumping up through surface
-				self.object:setacceleration({x = 0, y = 0, z = 0})
-				self.object:setvelocity(get_velocity(self.v, self.object:getyaw(),
+				self.object:set_acceleration({x = 0, y = 0, z = 0})
+				self.object:set_velocity(get_velocity(self.v, self.object:get_yaw(),
 					self.object:getvelocity().y))
-				self.object:setpos(self.object:getpos())
+				self.object:set_pos(self.object:get_pos())
 			end
 			--if node_under.name == "rocket:dust" or
 			--		node_under.name == "rocket:dustprint1" or
