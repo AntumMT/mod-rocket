@@ -135,6 +135,15 @@ thrust sound is actually a renamed "fire_fire.3.ogg" taken from fire. The models
 For more information on Melkor's models and textures, please go
 [here](https://forum.luanti.org/viewtopic.php?p=362717#p362717).
 
+## Links
+
+- [Forum][forum]
+- Git Repo Mirrors:
+    - [Codeberg](https://codeberg.org/AntumLuanti/mod-rocket)
+    - [GitHub](https://github.com/AntumMT/mod-rocket)
+    - [GitLab](https://gitlab.com/AntumMT/mod-rocket)
+- [Original Source by Red_King_Cyclops](https://git.minetest.land/Red_King_Cyclops/rocket)
+
 ## TODO
 
 - make other_worlds compatible
