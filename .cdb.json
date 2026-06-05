@@ -1,0 +1,20 @@
+{
+	"$schema": "https://content.luanti.org/api/cdb_schema/",
+	"type": "MOD",
+	"title": "Space Shuttles",
+	"name": "rocket",
+	"short_description": "Adds in rockets that you can use to fly into and in outer space.",
+	"dev_state": "WIP",
+	"ai_disclosure": "NONE",
+	"tags": ["transport"],
+	"content_warnings": null,
+	"license": "MIT",
+	"media_license": "CC BY-NC-SA-4.0",
+	"repo": "https://codeberg.org/AntumLuanti/mod-rocket",
+	"issue_tracker": "https://codeberg.org/AntumLuanti/mod-rocket/issues",
+	"website": null,
+	"forums": 23120,
+	"video_url": null,
+	"donate_url": null,
+	"translation_url": null
+}
