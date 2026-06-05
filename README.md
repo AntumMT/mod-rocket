@@ -116,9 +116,9 @@ Optional:
 
 ## Licensing
 
-The code is licensed as MIT and the media as CC-BY-SA-3.0, except for "old_rocket.png", which is
-licensed as CC-BY-SA-4.0, and "rocket.png", "rover.png", "rocket.obj", "rover.obj", and
-"sideways_rocket.obj", which are all licensed under CC-BY-NC-SA.
+The code is licensed as [MIT](LICENSE.txt) and the media as [CC-BY-SA-3.0], except for
+"old_rocket.png", which is licensed as [CC-BY-SA-4.0], and "rocket.png", "rover.png", "rocket.obj",
+"rover.obj", and "sideways_rocket.obj", which are all licensed under [CC-BY-NC-SA].
 This mod and two models were made by Red_King_Cyclops, but several textures and much of code was
 made by other users. Almost all of the code is modified code from Paramat's airboat mod. The texture
 "old_rocket.png" is actually "submarine.png" renamed, taken from the submarines modpack by
@@ -154,3 +154,7 @@ For more information on Melkor's models and textures, please go
 
 
 [forum]: https://forum.luanti.org/viewtopic.php?t=23120
+
+[CC-BY-SA-3.0]: https://creativecommons.org/licenses/by-sa/3.0/
+[CC-BY-SA-4.0]: https://creativecommons.org/licenses/by-sa/4.0/
+[CC-BY-NC-SA]: https://creativecommons.org/licenses/by-nc-sa/4.0/
