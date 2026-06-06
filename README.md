@@ -148,25 +148,6 @@ Media: See [README-media](README-media.md)
 [forum]: https://forum.luanti.org/viewtopic.php?t=23120
 
 [airboat]: https://forum.luanti.org/viewtopic.php?t=20485
-[bucket]: https://github.com/minetest-game/bucket
-[default]: https://github.com/minetest-game/default
-[fire]: https://github.com/minetest-game/fire
-[lib_materials]: https://forum.luanti.org/viewtopic.php?p=349384
-[submarines]: https://forum.luanti.org/viewtopic.php?t=16282
-[tnt]: https://github.com/minetest-game/tnt
 
-[BlockMen]: https://forum.luanti.org/memberlist.php?mode=viewprofile&u=4473
-[ElementW]: https://github.com/ElementW
-[kilbith]: https://content.luanti.org/users/jp/
-[krokoschlange]: https://forum.luanti.org/memberlist.php?mode=viewprofile&u=19619
-[Melkor]: https://forum.luanti.org/memberlist.php?mode=viewprofile&u=301
 [paramat]: https://content.luanti.org/users/paramat/
 [Red_King_Cyclops]: https://content.luanti.org/users/Red_King_Cyclops/
-[ShadMOrdre]: https://forum.luanti.org/memberlist.php?mode=viewprofile&u=12292
-[ShadowNinja]: https://content.luanti.org/users/ShadowNinja/
-
-[CC BY 3.0]: https://creativecommons.org/licenses/by/3.0/
-[CC BY-NC-SA]: https://creativecommons.org/licenses/by-nc-sa/4.0/
-[CC BY-SA 3.0]: https://creativecommons.org/licenses/by-sa/3.0/
-[CC BY-SA 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
-[LGPL 2.1]: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
