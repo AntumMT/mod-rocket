@@ -61,6 +61,10 @@
     - _\* licensing info is unclear_
     - ???
     - by [Red_King_Cyclops]
+- [rover_inv](textures/rover_inv.png)
+    - public domain ([CC0])
+    - by ???
+    - from [space_travel_redo]
 
 The rocket fuel textures (including the rocket fuel bucket texture) are modified water textures from
 [default] and [bucket].
@@ -96,6 +100,7 @@ For more information on Melkor's models and textures, please go
 [default]: https://github.com/minetest-game/default
 [fire]: https://github.com/minetest-game/fire
 [lib_materials]: https://forum.luanti.org/viewtopic.php?p=349384
+[space_travel_redo]: https://github.com/axcore/space_travel_redo
 [submarines]: https://forum.luanti.org/viewtopic.php?t=16282
 [tnt]: https://github.com/minetest-game/tnt
 

@@ -54,7 +54,7 @@ local rover = {
 
 core.register_craftitem("rocket:rover", {
 	description = "Rover",
-	inventory_image = "rover.png",--"rocket_rover_front.png",
+	inventory_image = "rover_inv.png",
 	--wield_scale = {x = 2, y = 2, z = 2},
 
 	on_place = function(itemstack, placer, pointed_thing)
