@@ -53,7 +53,7 @@
     - _\* licensing info is unclear_
     - ???
     - by [Red_King_Cyclops]
-- [rocket_smoke](textures/rocket_smoke.png):
+- [rocket_smoke](textures/rocket_smoke.png)
     - [CC BY-SA 3.0]
     - by [ShadowNinja]
     - from [tnt] (renamed from "tnt_smoke.png")
