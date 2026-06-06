@@ -32,6 +32,7 @@ end
 
 -- Rover entity
 
+--[[
 local rover = {
 	physical = true,
 	collide_with_objects = true,
@@ -43,6 +44,25 @@ local rover = {
 	visual_size = {x = 1.0, y = 1.0, z = 1.0},
 	textures = {"rover.png"},
 	stepheight = 0,
+	driver = nil,
+	v = 0,
+	last_v = 0,
+	removed = false,
+}
+]]--
+local rover = {
+	initial_properties = {
+		physical = true,
+		collide_with_objects = true,
+		--collisionbox = {-0.7, 0.4, -0.7, 0.7, 1.0, 0.7},
+		--collisionbox = {-1.6, 0.0, -1.0, 1.4, 3.0, 3.5},
+		collisionbox = {-1.0, 0.0, -1.0, 1.0, 3.0, 1.0},
+		visual = "mesh",
+		mesh = "rover.obj",
+		visual_size = {x = 1.0, y = 1.0, z = 1.0},
+		textures = {"rover.png"},
+		stepheight = 0,
+	},
 	driver = nil,
 	v = 0,
 	last_v = 0,
