@@ -144,6 +144,10 @@ Media: See [README-media](README-media.md)
 - update forum topic
 - figure out licensing for media created by Red_King_Cyclops &amp; for rocket_fuel textures
 
+## BUGS
+
+- rocket continues upward if player exits while thrusting
+
 
 [forum]: https://forum.luanti.org/viewtopic.php?t=23120
 
