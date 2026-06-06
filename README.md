@@ -112,6 +112,7 @@ Required:
 Optional:
 
 * [other_worlds](https://content.luanti.org/packages/TenPlus1/other_worlds/)
+* [space_travel](https://forum.luanti.org/viewtopic.php?t=23455)
 * [vacuum](https://forum.luanti.org/viewtopic.php?t=20195)
 
 ## Licensing
