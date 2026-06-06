@@ -103,6 +103,15 @@ core.register_craftitem("rocket:rover", {
 	end,
 })
 
+core.register_craft({
+	type = "shaped",
+	output = "rocket:rover",
+	recipe = {
+		{"default:glass", "default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steelblock", "default:steel_ingot"},
+		{"space_travel:lava_crystal", "space_travel:lunar_spinel_gem", "rocket:rocket_thruster"},
+	}
+})
 
 -- Register entity
 
